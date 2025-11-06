@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"sync"
 	"syscall"
 	"time"
@@ -202,6 +203,17 @@ func getField(data interface{}, field string) interface{} {
 
 func main() {
 	flag.Parse()
+
+	// 如果配置文件是相对路径，则相对于 main.go 所在目录
+	if !filepath.IsAbs(*configFile) {
+		// 获取可执行文件所在目录
+		execPath, err := os.Executable()
+		if err != nil {
+			log.Fatalf("❌ Failed to get executable path: %v", err)
+		}
+		execDir := filepath.Dir(execPath)
+		*configFile = filepath.Join(execDir, *configFile)
+	}
 
 	// 检查配置文件
 	if _, err := os.Stat(*configFile); os.IsNotExist(err) {
