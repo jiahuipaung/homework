@@ -1,0 +1,32 @@
+vendor/
+logs/
+fc-stash
+client/client
+tests/sample/sample
+.idea/
+.DS_Store/
+.DS_Store
+output/
+app/stash/stash
+
+# Binary files
+app/stash/stash
+fc-stash
+
+# Go specific
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# IDE specific
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# test
+label_mappings_test.csv

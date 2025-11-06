@@ -1,0 +1,7 @@
+#所有格式以#开头,避免影响grok_pattern的加载
+#基本格式 #"key":"pattern"
+#"/ws-oms":"/ws-oms/(?P<id>[0-9]+)/(?P<uuid>[a-z0-9]+)/.*"
+#"/ws-online-hospital":"/ws-online-hospital/(?P<id>[0-9]+)/(?P<uuid>[a-z0-9]+)/.*"
+#"/notice-ontime":"/notice-ontime/(?P<id>[0-9]+)/(?P<uuid>[a-z0-9]+)/.*"
+# 替换多个段, 命名必须区分
+#"/hsy/":"/hsy/(?P<seg1>[a-z0-9:]+)/(?P<seg2>[a-z0-9:]+)/.*"

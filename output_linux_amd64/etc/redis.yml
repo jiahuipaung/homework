@@ -1,0 +1,21 @@
+redis:
+  default:
+    addr:           "10.99.1.106:6379"
+    username:       ""
+    password:       ""
+    maxRetries:     1
+    dialTimeout:    "1s"
+    readTimeout:    "1s"
+    writeTimeout:   "1s"
+    poolSize:       10
+    minIdleConns:   1
+  n9e_v5:
+    addr:           "10.99.1.106:6379"
+    username:       ""
+    password:       ""
+    maxRetries:     1
+    dialTimeout:    "1s"
+    readTimeout:    "1s"
+    writeTimeout:   "1s"
+    poolSize:       10
+    minIdleConns:   1

@@ -1,0 +1,10 @@
+log:
+  level:          DEBUG
+  development:    true
+  maxsize:        10240
+  maxage:         1
+  maxbackupsize:  20480
+  maxQueueSize:   100000
+  outputPaths:
+    stash:
+      - "fc-stash.log"

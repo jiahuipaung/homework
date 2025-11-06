@@ -1,0 +1,22 @@
+srv:
+  mode:             "release"
+  tmplDir:          "tmpl/"
+  loginVerifyOff:   true
+  jwtAuth:
+    signingKey:     "5b94a0fd640fe2765af826acfe42d151"
+    accessExpired:  1500
+    refreshExpired: 10080
+    redisKeyPrefix: "/fc_jwt/"
+  hideOutBodyPatterns:
+    #- POST:/api/v1/northstar/metric/history/ui
+    #- POST:/api/v2/firemap/history/ui
+    - POST:/api/v1/dimensions/history/ui
+    #- POST:/api/v1/dimensions/index/search
+    #- POST:/select/0/prometheus/api/v1/query_range
+  http:
+    stash:
+      port:   9062
+      isTLS:  false
+      pprof:
+        enabled:  true
+        port:     9063

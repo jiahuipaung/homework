@@ -1,0 +1,94 @@
+stash:
+  pipelineconfig:
+    ch_size: 1000
+    num_of_worker: 8
+    num_of_output_worker: 1
+    drop_rate: 0
+  grok_pattern: /home/work/fc-insight/scripts/templates/patterns/grok-patterns
+  replace_pattern: /home/work/fc-insight/scripts/templates/patterns/replace-patterns
+  enable_input_filter: false
+  input_include_topics:
+  input_exclude_topics:
+    - fc_stash_benchmark
+  kafak_start_offset: ""
+  elastic_bulk_size_bytes: 0
+  elastic_bulk_flush_seconds: 0
+  elastic_bulk_optimize: true
+  vm_logs_batch_actions: 10
+  vm_logs_batch_size_bytes: 5*1024
+  vm_logs_batch_flush_seconds: 10
+  vm_logs_max_retry_backoff: 15
+  disable_common_log: false
+  n9e_service:
+    username: user001
+    password: ccc26da7b9aba533cbb263a36c07dcc5
+    webapis:
+    - http://10.99.1.106:18001
+  insight_service:
+    webapis:
+    - http://10.99.1.106:9012
+  plugins:
+  # 固定是 hundsun_request_log
+  - type: "hundsun_request_log"
+    redis_env: ""
+    num_of_worker: 8
+    worker_id: "self defined"
+    max_merge_size: 0
+    merge_window_seconds: 300
+    duplicate_window_seconds: 3600
+    local_cache_size: 0
+    input:
+      # kafka 的配置
+      # topic
+      topic: junhong_log
+      # consumer_group
+      group_id: junhong_log_merge
+      # broker列表
+      brokers:
+      - 10.99.1.105:9092
+    output:
+      # es 的配置
+      # 索引名称
+      # 这个索引后面会用于添加日志主题, ES类型
+      index: hundsun_merge
+      # 分片规则, hourly/daily
+      suffix_format: "daily"
+      # 索引保留时长
+      retention:  "1d"
+      # es 地址
+      # 与日志主题中配置的数据源保持一致
+      servers:
+      - "http://10.99.1.105:9200"
+      # es 用户名+密码
+      username: elastic
+      password: "MhxzKhl@FC"
+      # 固定是 hundsun_request_log
+
+  - type: "enrich_g_account"
+    num_of_worker: 8
+    account_dict_expires_seconds: 0
+    input:
+      # kafka 的配置
+      # topic
+      topic: fc_log_guotai_dict
+      # consumer_group
+      group_id: fc_log_replay_cg
+      # broker列表
+      brokers:
+      - 10.99.1.105:9092
+    output:
+      # es 的配置
+      # 索引名称
+      # 这个索引后面会用于添加日志主题, ES类型
+      index: guotai_enrich_gaccount
+      # 分片规则, hourly/daily
+      suffix_format: "daily"
+      # 索引保留时长
+      retention:  "2d"
+      # es 地址
+      # 与日志主题中配置的数据源保持一致
+      servers:
+      - "http://10.99.1.105:9200"
+      # es 用户名+密码
+      username: elastic
+      password: "MhxzKhl@FC"
