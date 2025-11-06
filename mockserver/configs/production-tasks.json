@@ -1,0 +1,136 @@
+{
+  "data": {
+    "data_sources": {
+      "10025": {
+        "type": "kafka",
+        "settings": {
+          "kafka.brokers": [
+            "10.99.1.105:9092"
+          ],
+          "kafka.topic": "fc-insight-self",
+          "kafka.group": "flashcat",
+          "kafka.auth": {
+            "method": "",
+            "mtls": {
+              "client.cert": "",
+              "client.key": "",
+              "ca.cert": "",
+              "server.name": ""
+            },
+            "sasl": {
+              "client.username": "",
+              "client.password": ""
+            }
+          },
+          "kafka.message.sample": ""
+        }
+      },
+      "10049": {
+        "type": "doris",
+        "settings": {
+          "doris.is_encrypt": false,
+          "doris.cluster_name": "default",
+          "doris.addr": "10.99.1.6:9030",
+          "doris.fe_addr": "10.99.1.6:8030",
+          "doris.user": "root",
+          "doris.password": "Qzbr6EGAvVNkA7RF",
+          "doris.timeout": 15000,
+          "doris.enable_write": true
+        }
+      }
+    },
+    "tasks": [
+      {
+        "id": 91,
+        "data_source_id": 10025,
+        "settings": {
+          "mode": "json",
+          "version": "log_transform",
+          "json_settings": {
+            "pre_function": [],
+            "prefix_match": [
+              "message",
+              "status",
+              "timestamp",
+              "agent_hostname",
+              "fcservice",
+              "fcsource",
+              "fctags",
+              "topic",
+              "msg_key"
+            ],
+            "pre_extract": [],
+            "multi_pre_extract": false,
+            "skip_extract_error": false,
+            "overwrite_origin": false,
+            "fields_transform": [
+              {
+                "rule_type": "delete",
+                "origin_field": "msg_key",
+                "origin_type": "text",
+                "target_type": "text",
+                "format_settings": {
+                  "format_type": "uripath",
+                  "time_format": {},
+                  "desensitize": {},
+                  "regexp_mapping": {}
+                },
+                "append_settings": {
+                  "label_mapping": {}
+                },
+                "drop_if_not_found": false,
+                "ignore_if_conflict": false
+              },
+              {
+                "rule_type": "format",
+                "origin_field": "timestamp",
+                "origin_type": "float",
+                "target_type": "date",
+                "format_settings": {
+                  "format_type": "allmatch",
+                  "time_format": {
+                    "date_format": "%s%3N",
+                    "date_location": "Local"
+                  },
+                  "desensitize": {},
+                  "regexp_mapping": {}
+                },
+                "append_settings": {
+                  "label_mapping": {}
+                },
+                "drop_if_not_found": false,
+                "ignore_if_conflict": false
+              }
+            ]
+          }
+        },
+        "storage": {
+          "data_source_type": "",
+          "doris": {
+            "data_source_id": 10049,
+            "database": "stash_test",
+            "table": "fc_insight",
+            "is_create_table": true,
+            "sort_keys": [
+              "timestamp"
+            ],
+            "partition_setting": {
+              "enable": true,
+              "partition_field": "timestamp",
+              "partition_reserve_days": 3
+            },
+            "cold_down_settings": {
+              "enable": false,
+              "resource_name": "",
+              "ttl_hours": 0
+            },
+            "replication_settings": {
+              "enable": false,
+              "num": 1
+            }
+          }
+        }
+      }
+    ]
+  }
+}
