@@ -16,7 +16,7 @@ import (
 
 var (
 	port       = flag.Int("port", 8080, "HTTP server port")
-	configFile = flag.String("config", "configs/vmlogs-test-tasks.json", "Path to configuration JSON file")
+	configFile = flag.String("config", "test.json", "Path to configuration JSON file")
 	verbose    = flag.Bool("verbose", false, "Enable verbose logging")
 	hotReload  = flag.Bool("hot-reload", true, "Enable hot reload of config file")
 )
