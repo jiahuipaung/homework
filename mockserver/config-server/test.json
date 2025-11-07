@@ -1,0 +1,137 @@
+{
+  "data": {
+    "data_sources": {
+      "20001": {
+        "type": "kafka",
+        "settings": {
+          "kafka.auth": {
+            "method": "",
+            "mtls": {
+              "ca.cert": "",
+              "client.cert": "",
+              "client.key": "",
+              "server.name": ""
+            },
+            "sasl": {
+              "client.password": "",
+              "client.username": ""
+            }
+          },
+          "kafka.brokers": [
+            "10.99.1.105:9092"
+          ],
+          "kafka.group": "vmlogs-test-group",
+          "kafka.message.sample": "",
+          "kafka.topic": "fc-insight-self"
+        }
+      },
+      "20002": {
+        "type": "victoria_logs",
+        "settings": {
+          "header": {},
+          "vmlogs.basic": {
+            "vmlogs.auth.enable": true,
+            "vmlogs.password": "root.2020",
+            "vmlogs.user": "root"
+          },
+          "vmlogs.cluster_name": "",
+          "vmlogs.endpoints": [
+            "http://10.99.1.15:9428"
+          ],
+          "vmlogs.timeout": 10,
+          "vmlogs.tls": {
+            "vmlogs.tls.skip_tls_verify": true
+          }
+        }
+      }
+    },
+    "tasks": [
+      {
+        "id": 1001,
+        "data_source_id": 20001,
+        "settings": {
+          "mode": "json",
+          "version": "log_transform",
+          "json_settings": {
+            "pre_function": [],
+            "prefix_match": [
+              "message",
+              "status",
+              "timestamp",
+              "agent_hostname",
+              "fcservice",
+              "fcsource",
+              "level"
+            ],
+            "pre_extract": [],
+            "multi_pre_extract": false,
+            "skip_extract_error": false,
+            "overwrite_origin": false,
+            "fields_transform": [
+              {
+                "rule_type": "format",
+                "origin_field": "timestamp",
+                "origin_type": "float",
+                "target_type": "date",
+                "format_settings": {
+                  "format_type": "allmatch",
+                  "time_format": {
+                    "date_format": "%s%3N",
+                    "date_location": "Local"
+                  },
+                  "desensitize": {},
+                  "regexp_mapping": {}
+                },
+                "append_settings": {
+                  "label_mapping": {}
+                },
+                "drop_if_not_found": false,
+                "ignore_if_conflict": false
+              },
+              {
+                "rule_type": "rename",
+                "origin_field": "timestamp",
+                "origin_type": "float",
+                "target_field": "@timestamp",
+                "target_type": "text",
+                "format_settings": {
+                  "time_format": {},
+                  "desensitize": {},
+                  "regexp_mapping": {}
+                },
+                "append_settings": {
+                  "label_mapping": {}
+                },
+                "drop_if_not_found": false,
+                "ignore_if_conflict": false
+              }
+            ]
+          }
+        },
+        "storage": {
+          "data_source_type": "victoria_logs",
+          "victoria_logs": {
+            "data_source_id": 20002,
+            "msg_field_settings": {
+              "auto_msg": false,
+              "msg_field_name": "message"
+            },
+            "time_field_settings": {
+              "auto_time": false,
+              "time_field_name": "@timestamp"
+            },
+            "stream_fields_settings": {
+              "unspecified": false,
+              "stream_field_names": [
+                "fcservice",
+                "level",
+                "agent_hostname"
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "label_mappings": {}
+  }
+}
